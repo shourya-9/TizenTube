@@ -369,12 +369,12 @@ function addLongPress(items) {
     if (!item.tileRenderer) continue;
     if (item.tileRenderer.style !== 'TILE_STYLE_YTLR_DEFAULT') continue;
     if (item.tileRenderer.onLongPressCommand?.showMenuCommand) {
-      item.tileRenderer.onLongPressCommand.showMenuCommand.menu.menuRenderer.items.push(MenuServiceItemRenderer('Add to Queue', {
+      item.tileRenderer.onLongPressCommand.showMenuCommand.menu.menuRenderer.items.push(MenuServiceItemRenderer('Go to Channel', {
         clickTrackingParams: null,
         playlistEditEndpoint: {
           customAction: {
-            action: 'ADD_TO_QUEUE',
-            parameters: item
+            action: 'GO_TO_CHANNEL',
+            parameters: { videoId: item.tileRenderer.contentId }
           }
         }
       }));

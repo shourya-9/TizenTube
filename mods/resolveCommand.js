@@ -207,6 +207,9 @@ function customAction(action, parameters) {
             window.queuedVideos.videos.push(parameters);
             showToast('TizenTube', 'Video added to queue.');
             break;
+        case 'GO_TO_CHANNEL':
+            goToChannel(parameters);
+            break;
         case 'CLEAR_QUEUE':
             window.queuedVideos.videos = [];
             showToast('TizenTube', 'Video queue cleared.');
@@ -215,4 +218,35 @@ function customAction(action, parameters) {
             checkForUpdates(true);
             break;
     }
+}
+
+function goToChannel(parameters) {
+    const videoId = parameters && parameters.videoId;
+    if (!videoId) {
+        showToast('TizenTube', 'Could not determine video.');
+        return;
+    }
+
+    // Resolve the channel ID from the video ID by fetching the watch page.
+    // The TizenTube extension runs on youtube.com so this is same-origin.
+    fetch('https://www.youtube.com/watch?v=' + encodeURIComponent(videoId) + '&hl=en', {
+        credentials: 'omit'
+    })
+        .then(function (res) { return res.text(); })
+        .then(function (html) {
+            const match = html.match(/"channelId":"(UC[A-Za-z0-9_-]{20,})"/);
+            if (!match) {
+                showToast('TizenTube', 'Could not find channel.');
+                return;
+            }
+            const channelId = match[1];
+            resolveCommand({
+                browseEndpoint: {
+                    browseId: channelId
+                }
+            });
+        })
+        .catch(function () {
+            showToast('TizenTube', 'Failed to load channel.');
+        });
 }

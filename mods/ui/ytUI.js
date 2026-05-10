@@ -226,12 +226,12 @@ function longPressData(data) {
                                 videoId: data.videoId
                             }
                         }),
-                        MenuServiceItemRenderer('Add to Queue', {
+                        MenuServiceItemRenderer('Go to Channel', {
                             clickTrackingParams: null,
                             playlistEditEndpoint: {
                                 customAction: {
-                                    action: 'ADD_TO_QUEUE',
-                                    parameters: data.item
+                                    action: 'GO_TO_CHANNEL',
+                                    parameters: { videoId: data.videoId }
                                 }
                             }
                         }),
